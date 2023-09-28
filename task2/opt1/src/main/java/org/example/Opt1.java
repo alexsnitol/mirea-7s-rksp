@@ -26,6 +26,7 @@ public class Opt1 {
             while (buffer.hasRemaining()) {
                 System.out.print((char) buffer.get());
             }
+            buffer.clear();
         }
         channel.close();
         file.close();
