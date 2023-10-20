@@ -1,7 +1,5 @@
 package org.example;
 
-import io.reactivex.subjects.Subject;
-
 import java.time.LocalTime;
 import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -15,7 +13,7 @@ public class FileGenerator {
     }
 
 
-    public void start(Subject<File> subject) {
+    public void start() {
         while (true) {
             FileTypeEnum fileType = generateFileType();
             int fileSize = generateFileSize();
@@ -23,7 +21,6 @@ public class FileGenerator {
             try {
                 fileQueue.add(file);
                 System.err.println(LocalTime.now() + " GENERATOR: generated file " + file + ", it order is " + fileQueue.size());
-                subject.onNext(file);
             } catch (IllegalStateException ignored) {
             }
             try {
