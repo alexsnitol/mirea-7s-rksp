@@ -42,8 +42,8 @@ public class Opt2 {
 
         Flowable<Integer> flow = Flowable.fromIterable(numberList).map(n -> n * n);
 
-        List<Integer> numberList2 = new LinkedList<>();
-        flow.subscribe(numberList2::add);
+        List<Integer> squaresNumberList = new LinkedList<>();
+        flow.subscribe(squaresNumberList::add);
 
         out.println("сформирован  массив квадратов");
     }
@@ -83,11 +83,11 @@ public class Opt2 {
 
         Flowable<Integer> flow = Flowable.fromIterable(numberList);
 
-        List<Integer> numberList2 = new LinkedList<>();
+        List<Integer> filteredNumberList = new LinkedList<>();
         AtomicInteger index2 = new AtomicInteger(0);
         flow.subscribe(n -> {
             if (index2.get() >= 3) {
-                numberList2.add(n);
+                filteredNumberList.add(n);
             }
             index2.addAndGet(1);
         });
