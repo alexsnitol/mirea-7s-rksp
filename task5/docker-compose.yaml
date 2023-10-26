@@ -1,0 +1,79 @@
+services:
+  nginx:
+    image: nginx:1.25.3
+    container_name: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - task5_network
+    ports:
+      - 8080:8080
+  app1:
+    image: eclipse-temurin:17-jre-jammy
+    container_name: task5-app1
+    environment:
+      DB_HOST: db
+    volumes:
+      - ./build/libs/task5-1.jar:/opt/app/app.jar
+    entrypoint: java -jar /opt/app/app.jar
+    networks:
+      - task5_network
+    expose:
+      - 8080
+  app2:
+    image: eclipse-temurin:17-jre-jammy
+    container_name: task5-app2
+    environment:
+      DB_HOST: db
+    volumes:
+      - ./build/libs/task5-1.jar:/opt/app/app.jar
+    entrypoint: java -jar /opt/app/app.jar
+    networks:
+      - task5_network
+    expose:
+      - 8080
+  app3:
+    image: eclipse-temurin:17-jre-jammy
+    container_name: task5-app3
+    environment:
+      DB_HOST: db
+    volumes:
+      - ./build/libs/task5-1.jar:/opt/app/app.jar
+    entrypoint: java -jar /opt/app/app.jar
+    networks:
+      - task5_network
+    expose:
+      - 8080
+  app4:
+    image: eclipse-temurin:17-jre-jammy
+    container_name: task5-app4
+    environment:
+      DB_HOST: db
+    volumes:
+      - ./build/libs/task5-1.jar:/opt/app/app.jar
+    entrypoint: java -jar /opt/app/app.jar
+    networks:
+      - task5_network
+    expose:
+      - 8080
+  db:
+    image: postgres:13-alpine
+    container_name: task5-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: task5
+    volumes:
+      - ./db-init.sql:/docker-entrypoint-initdb.d/init.sql
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - task5_network
+    expose:
+      - 5432
+
+volumes:
+  pgdata:
+
+networks:
+  task5_network:
