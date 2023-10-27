@@ -14,7 +14,6 @@ import reactor.core.publisher.Mono;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static java.util.Objects.nonNull;
 
@@ -39,44 +38,48 @@ public class GameCoverServiceImpl implements GameCoverService {
 
     @Override
     public Mono<File> putCoverFileByGameId(UUID gameId, FilePart file) {
-        File newCoverFile = new File();
         List<Byte> byteList = new LinkedList<>();
-        file.content().doOnNext(dataBuffer -> {
+        return file.content().doOnNext(dataBuffer -> {
             byte[] bytes = new byte[dataBuffer.readableByteCount()];
             dataBuffer.read(bytes);
             DataBufferUtils.release(dataBuffer);
             byteList.addAll(Bytes.asList(bytes));
-        }).doOnComplete(() -> {
+        }).then(Mono.defer(() -> {
             byte[] byteArray = Bytes.toArray(byteList);
+            File newCoverFile = new File();
             newCoverFile.setData(byteArray);
-            Mono<File> fileMono = fileRepository.save(newCoverFile);
-            fileMono.subscribe(coverFile -> setCoverToGameById(gameId, coverFile));
-        }).subscribe();
-        return Mono.empty();
+            return fileRepository.save(newCoverFile)
+                    .flatMap(coverFile -> setCoverToGameById(gameId, coverFile));
+        }));
     }
 
-    private void setCoverToGameById(UUID gameId, File coverFile) {
-        gameRepository.findById(gameId).subscribe(game -> {
+    private Mono<File> setCoverToGameById(UUID gameId, File coverFile) {
+        return gameRepository.findById(gameId).flatMap(game -> {
             UUID currentGameCoverFileId = game.getCoverFileId();
             if (nonNull(currentGameCoverFileId)) {
-                fileRepository.deleteById(currentGameCoverFileId).subscribe();
+                return fileRepository.deleteById(currentGameCoverFileId)
+                        .then(Mono.defer(() -> {
+                            game.setCoverFileId(coverFile.getId());
+                            return gameRepository.save(game);
+                        }))
+                        .then(Mono.just(coverFile));
+            } else {
+                game.setCoverFileId(coverFile.getId());
+                return gameRepository.save(game)
+                        .then(Mono.just(coverFile));
             }
-            game.setCoverFileId(coverFile.getId());
-            gameRepository.save(game).subscribe();
         });
     }
 
     @Override
     public Mono<Void> deleteCoverFileByGameId(UUID gameId) {
-        AtomicReference<UUID> coverFileId = new AtomicReference<>();
-        gameRepository.findById(gameId).doOnNext(game -> {
-            coverFileId.set(game.getCoverFileId());
-            game.setCoverFileId(null);
-            gameRepository.save(game)
-                    .doOnNext(ignored -> fileRepository.deleteById(coverFileId.get()).subscribe())
-                    .subscribe();
-        }).subscribe();
-        return Mono.empty();
+        return gameRepository.findById(gameId)
+                .flatMap(game -> {
+                    UUID coverFileId = game.getCoverFileId();
+                    game.setCoverFileId(null);
+                    return gameRepository.save(game)
+                            .then(Mono.defer(() -> fileRepository.deleteById(coverFileId)));
+                });
     }
 
 }

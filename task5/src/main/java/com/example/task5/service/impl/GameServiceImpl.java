@@ -42,10 +42,9 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public Mono<Void> deleteById(UUID id) {
-        Mono<Void> voidMono = gameRepository.deleteById(id);
-        voidMono.doOnNext((ignored) -> fileRepository.deleteByGameCoverFileId(id).subscribe())
-                .subscribe();
-        return voidMono;
+        return gameRepository.findById(id)
+                .flatMap(game -> gameRepository.deleteById(id)
+                        .then(Mono.defer(() -> fileRepository.deleteById(game.getCoverFileId()))));
     }
 
 }
