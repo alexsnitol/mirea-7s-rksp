@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: pay-service
+  liquibase:
+    liquibase-schema: migration
+    default-schema: public
+    url: jdbc:postgresql://${DB_HOST:localhost}:5432/gm_payment
+    user: postgres
+    password: postgres
+  r2dbc:
+    username: postgres
+    password: postgres
+    url: r2dbc:postgresql://${DB_HOST:localhost}:5432/gm_payment
+  servlet:
+    multipart:
+      max-file-size: 500KB
+      max-request-size: 500KB
+
+blockchain:
+  node:
+    url: ${NODE_URL}
+    token: ${NODE_TOKEN}
+  contract:
+    address: ${CONTRACT_ADDRESS}
+    gas-price: 1
+    gas-limit: 2000000
+    owner-private-key: ${OWNER_PRIVATE_KEY}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka}

@@ -1,0 +1,2 @@
+ALTER TABLE payment
+    ADD COLUMN status varchar NOT NULL DEFAULT 'UNKNOWN';

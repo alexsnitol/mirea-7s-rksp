@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: 1_init.sql
+      relativeToChangelogFile: true
+  - include:
+      file: 2_added_user_game_table.sql
+      relativeToChangelogFile: true

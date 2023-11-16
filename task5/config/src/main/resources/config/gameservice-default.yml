@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: game-service
+  liquibase:
+    liquibase-schema: migration
+    default-schema: public
+    url: jdbc:postgresql://${DB_HOST:localhost}:5432/gm_game
+    user: postgres
+    password: postgres
+  r2dbc:
+    username: postgres
+    password: postgres
+    url: r2dbc:postgresql://${DB_HOST:localhost}:5432/gm_game
+  servlet:
+    multipart:
+      max-file-size: 500KB
+      max-request-size: 500KB
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: ${OAUTH_GITHUB_CLIENT_ID}
+            client-secret: ${OAUTH_GITHUB_CLIENT_SECRET}
+            scope:
+              - read:user
+              - user:email
+          google:
+            client-id: "${OAUTH_GOOGLE_CLIENT_ID}"
+            client-secret: "${OAUTH_GOOGLE_CLIENT_SECRET}"
+            scope:
+              - email
+              - profile
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka}
+  instance:
+    prefer-ip-address: true
+
+external-services:
+  file-service:
+    endpoints:
+      get-file-by-id: ${GM_FILE_SERVICE_GET_FILE_BY_ID_ENDPOINT}
+      upload-file: ${GM_FILE_SERVICE_UPLOAD_FILE_ENDPOINT}
+      delete-file-by-id: ${GM_FILE_SERVICE_DELETE_FILE_BY_ID_ENDPOINT}
+  pay-service:
+    endpoints:
+      save-or-update-game: ${GM_PAY_SERVICE_SAVE_OR_UPDATE_GAME_ENDPOINT}
+      pay-game: ${GM_PAY_SERVICE_PAY_GAME_ENDPOINT}

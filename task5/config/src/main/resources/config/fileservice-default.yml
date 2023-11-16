@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: file-service
+  liquibase:
+    liquibase-schema: migration
+    default-schema: public
+    url: jdbc:postgresql://${DB_HOST:localhost}:5432/gm_file
+    user: postgres
+    password: postgres
+  r2dbc:
+    username: postgres
+    password: postgres
+    url: r2dbc:postgresql://${DB_HOST:localhost}:5432/gm_file
+  servlet:
+    multipart:
+      max-file-size: 500KB
+      max-request-size: 500KB
