@@ -12,10 +12,10 @@ data:
   gmGatewayUrl: "http://gateway:8080"
   gmPayServicePayGameEndpoint: "/operations/pay-game?gameId={gameId}&privateKeyConsumerAccount={privateKeyConsumerAccount}"
   gmPayServiceSaveOrUpdateGameEndpoint: "/operations/game"
-  oauthGithubClientId: "f82cf4e7b188bf02b739"
-  oauthGithubClientSecret: "a9c17979ffc08f8c7eb558739692fbf6f274d8ba"
-  oauthGoogleClientId: "1000450723186-d7d39he82d59fe8rlvmjmrqdm1gq2jcu:apps:googleusercontent:com"
-  oauthGoogleClientSecret: "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"
+  oauthGithubClientId: #oauthGithubClientId
+  oauthGithubClientSecret: #oauthGithubClientSecret
+  oauthGoogleClientId: #oauthGoogleClientId
+  oauthGoogleClientSecret: #oauthGoogleClientSecret
   kafkaBootstrapServer: "sentry:9092"
   payRequestTopic: "payRequest"
   payResponseTopic: "payResponse"
