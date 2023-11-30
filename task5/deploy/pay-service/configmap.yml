@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: payservice-config
+  namespace: default
+data:
+  dbHost: "db"
+  contractAddress: #contractAddress
+  nodeToken: #nodeToken
+  nodeUrl: #nodeUrl
+  ownerPrivateKey: #ownerPrivateKey
+  kafkaBootstrapServer: "sentry:9092"
+  payRequestTopic: "payRequest"
+  payResponseTopic: "payResponse"

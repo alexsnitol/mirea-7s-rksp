@@ -1,0 +1,105 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: gameservice
+  name: gameservice
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gameservice
+  template:
+    metadata:
+      labels:
+        app: gameservice
+    spec:
+      containers:
+        - image: gm-gameservice:v1
+          name: gameservice
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: gameservice-config
+                  key: dbHost
+            - name: EUREKA_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: gameservice-config
+                  key: eurekaUrl
+            - name: GM_FILE_SERVICE_DELETE_FILE_BY_ID_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: gameservice-config
+                  key: gmFileServiceDeleteFileByIdEndpoint
+            - name: GM_FILE_SERVICE_GET_FILE_BY_ID_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: gameservice-config
+                  key: gmFileServiceGetFileByIdEndpoint
+            - name: GM_FILE_SERVICE_UPLOAD_FILE_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: gameservice-config
+                  key: gmFileServiceUploadFileEndpoint
+            - name: GM_GATEWAY_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: gameservice-config
+                  key: gmGatewayUrl
+            - name: GM_PAY_SERVICE_PAY_GAME_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: gameservice-config
+                  key: gmPayServicePayGameEndpoint
+            - name: GM_PAY_SERVICE_SAVE_OR_UPDATE_GAME_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: gameservice-config
+                  key: gmPayServiceSaveOrUpdateGameEndpoint
+            - name: OAUTH_GITHUB_CLIENT_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: gameservice-config
+                  key: oauthGithubClientId
+            - name: OAUTH_GITHUB_CLIENT_SECRET
+              valueFrom:
+                configMapKeyRef:
+                  name: gameservice-config
+                  key: oauthGithubClientSecret
+            - name: OAUTH_GOOGLE_CLIENT_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: gameservice-config
+                  key: oauthGoogleClientId
+            - name: OAUTH_GOOGLE_CLIENT_SECRET
+              valueFrom:
+                configMapKeyRef:
+                  name: gameservice-config
+                  key: oauthGoogleClientSecret
+            - name: KAFKA_BOOTSTRAP_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: gameservice-config
+                  key: kafkaBootstrapServer
+            - name: PAY_REQUEST_TOPIC
+              valueFrom:
+                configMapKeyRef:
+                  name: gameservice-config
+                  key: payRequestTopic
+            - name: PAY_RESPONSE_TOPIC
+              valueFrom:
+                configMapKeyRef:
+                  name: gameservice-config
+                  key: payResponseTopic
+            - name: SERVER_PORT
+              value: "8081"

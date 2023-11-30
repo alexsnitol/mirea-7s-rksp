@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: discovery
+  name: discovery
+  namespace: default
+spec:
+  ports:
+    - port: 8761
+      protocol: TCP
+      targetPort: 8761
+  selector:
+    app: discovery
+  type: ClusterIP

@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: graylog
+  name: graylog
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: graylog
+  template:
+    metadata:
+      labels:
+        app: graylog
+    spec:
+      containers:
+        - image: graylog/graylog:5.0
+          name: graylog
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          command:
+            - /usr/bin/tini
+            - --
+            - wait-for-it
+            - elasticsearch:9200
+            - --
+            - /docker-entrypoint.sh
+          env:
+            - name: GRAYLOG_PASSWORD_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: graylog-secret
+                  key: graylogPasswordSecret
+            - name: GRAYLOG_ROOT_PASSWORD_SHA2
+              valueFrom:
+                secretKeyRef:
+                  name: graylog-secret
+                  key: graylogRootPasswordSha2
+            - name: GRAYLOG_HTTP_EXTERNAL_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: graylog-config
+                  key: graylogHttpExternalUri

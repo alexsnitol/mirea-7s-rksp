@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: payservice
+  name: payservice
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payservice
+  template:
+    metadata:
+      labels:
+        app: payservice
+    spec:
+      containers:
+        - image: gm-payservice:v1
+          name: payservice
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: payservice-config
+                  key: dbHost
+            - name: CONTRACT_ADDRESS
+              valueFrom:
+                configMapKeyRef:
+                  name: payservice-config
+                  key: contractAddress
+            - name: NODE_TOKEN
+              valueFrom:
+                configMapKeyRef:
+                  name: payservice-config
+                  key: nodeToken
+            - name: NODE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: payservice-config
+                  key: nodeUrl
+            - name: OWNER_PRIVATE_KEY
+              valueFrom:
+                configMapKeyRef:
+                  name: payservice-config
+                  key: ownerPrivateKey
+            - name: KAFKA_BOOTSTRAP_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: payservice-config
+                  key: kafkaBootstrapServer
+            - name: PAY_REQUEST_TOPIC
+              valueFrom:
+                configMapKeyRef:
+                  name: payservice-config
+                  key: payRequestTopic
+            - name: PAY_RESPONSE_TOPIC
+              valueFrom:
+                configMapKeyRef:
+                  name: payservice-config
+                  key: payResponseTopic
+            - name: SERVER_PORT
+              value: "8083"
+            - name: EUREKA_URL
+              value: http://discovery:8761/eureka

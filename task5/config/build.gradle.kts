@@ -18,9 +18,17 @@ repositories {
 extra["springCloudVersion"] = "2021.0.8"
 
 dependencies {
-    implementation("org.springframework.cloud:spring-cloud-config-server")
-    implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.cloud:spring-cloud-config-server") {
+        exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
+    }
+    implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client") {
+        exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
+    }
+    implementation("org.springframework.boot:spring-boot-starter-actuator") {
+        exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
+    }
+    implementation("org.springframework.boot:spring-boot-starter-log4j2")
+    implementation("org.graylog2.log4j2:log4j2-gelf:1.3.1")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 

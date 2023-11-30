@@ -24,16 +24,29 @@ repositories {
 extra["springCloudVersion"] = "2021.0.8"
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
-    implementation("org.springframework.boot:spring-boot-starter-webflux")
-    implementation("org.springframework.cloud:spring-cloud-starter-config")
-    implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-data-r2dbc") {
+        exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
+    }
+//    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+    implementation("org.springframework.boot:spring-boot-starter-webflux") {
+        exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
+    }
+    implementation("org.springframework.cloud:spring-cloud-starter-config") {
+        exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
+    }
+    implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client") {
+        exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
+    }
+    implementation("org.springframework.boot:spring-boot-starter-actuator") {
+        exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
+    }
     implementation("org.liquibase:liquibase-core")
     implementation("org.springframework:spring-jdbc")
     implementation("org.springdoc:springdoc-openapi-ui:1.7.0")
     implementation("org.springdoc:springdoc-openapi-webflux-ui:1.7.0")
     implementation("com.google.guava:guava:32.1.3-jre")
+    implementation("org.springframework.boot:spring-boot-starter-log4j2")
+    implementation("org.graylog2.log4j2:log4j2-gelf:1.3.1")
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("org.postgresql:r2dbc-postgresql")

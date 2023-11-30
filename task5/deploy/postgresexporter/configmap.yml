@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgresexporter-config
+  namespace: default
+data:
+  dataSourceName: "postgresql://postgres:postgres@db:5432/gm_file?sslmode=disable"

@@ -1,0 +1,36 @@
+plugins {
+    java
+    `maven-publish`
+}
+
+group = "org.example"
+version = "1.0-SNAPSHOT"
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation(platform("org.junit:junit-bom:5.9.1"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+}
+
+tasks.test {
+    useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = "com.example"
+            artifactId = "payservice-api"
+            version = "0.0.1-SNAPSHOT"
+
+            from(components["java"])
+        }
+    }
+}

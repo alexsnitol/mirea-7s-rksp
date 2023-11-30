@@ -1,10 +1,16 @@
 package com.example.payservice.service.impl;
 
+import com.example.payservice.client.GameKafkaClient;
 import com.example.payservice.contracts.generated.Shop;
+import com.example.payservice.dto.PayRequestDto;
+import com.example.payservice.dto.PayResponseDto;
 import com.example.payservice.model.Game;
 import com.example.payservice.model.Payment;
 import com.example.payservice.repository.PaymentRepository;
 import com.example.payservice.service.PaymentService;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
@@ -22,12 +28,19 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
     private final Shop shopAuthOwner;
     private final Web3j web3j;
+    private final GameKafkaClient gameKafkaClient;
 
 
-    public PaymentServiceImpl(PaymentRepository paymentRepository, Shop shop, Web3j web3j) {
+    public PaymentServiceImpl(
+            PaymentRepository paymentRepository,
+            Shop shop,
+            Web3j web3j,
+            GameKafkaClient gameKafkaClient
+    ) {
         this.paymentRepository = paymentRepository;
         this.shopAuthOwner = shop;
         this.web3j = web3j;
+        this.gameKafkaClient = gameKafkaClient;
     }
 
     @Override
@@ -62,11 +75,29 @@ public class PaymentServiceImpl implements PaymentService {
         });
     }
 
+    @KafkaListener(topics = "${spring.kafka.topic.pay-request}")
+    public void consumePayRequests(PayRequestDto payRequestDto, @Header(KafkaHeaders.RECEIVED_MESSAGE_KEY) String userId) {
+        Payment payment = payGameById(payRequestDto.gameId(), payRequestDto.privateKeyConsumerAccount()).block();
+        gameKafkaClient.producePayResponse(
+                UUID.fromString(userId),
+                new PayResponseDto(
+                        payment.getId(),
+                        payment.getAddress(),
+                        payment.getValueWei(),
+                        payment.getStatus(),
+                        payRequestDto.gameId()
+                )
+        );
+    }
+
     @Override
     public Mono<BigInteger> getBalance() {
         return Mono.defer(() -> {
             try {
-                BigInteger balance = web3j.ethGetBalance(shopAuthOwner.getContractAddress(), DefaultBlockParameterName.LATEST).send().getBalance();
+                BigInteger balance = web3j.ethGetBalance(
+                        shopAuthOwner.getContractAddress(),
+                        DefaultBlockParameterName.LATEST
+                ).send().getBalance();
                 return Mono.just(balance);
             } catch (Exception e) {
                 throw new RuntimeException("Error in time getting balance of contract");

@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: elasticsearch
+  name: elasticsearch
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: elasticsearch
+  template:
+    metadata:
+      labels:
+        app: elasticsearch
+    spec:
+      containers:
+        - image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2
+          imagePullPolicy: Never
+          name: elasticsearch
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1024Mi"
+            limits:
+              cpu: "500m"
+              memory: "1024Mi"
+          env:
+            - name: http.host
+              valueFrom:
+                configMapKeyRef:
+                  name: elasticsearch-config
+                  key: httpHost
+            - name: transport.host
+              valueFrom:
+                configMapKeyRef:
+                  name: elasticsearch-config
+                  key: transportHost
+            - name: network.host
+              valueFrom:
+                configMapKeyRef:
+                  name: elasticsearch-config
+                  key: networkHost
+            - name: ES_JAVA_OPTS
+              valueFrom:
+                configMapKeyRef:
+                  name: elasticsearch-config
+                  key: esJavaOpts

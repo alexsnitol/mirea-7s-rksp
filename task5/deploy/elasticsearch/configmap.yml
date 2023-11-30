@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: elasticsearch-config
+  namespace: default
+data:
+  httpHost: "0.0.0.0"
+  transportHost: "localhost"
+  networkHost: "0.0.0.0"
+  esJavaOpts: "-Dlog4j2.formatMsgNoLookups=true -Xms512m -Xmx512m"

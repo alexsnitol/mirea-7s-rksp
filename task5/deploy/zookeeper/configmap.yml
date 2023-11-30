@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zookeeper-config
+  namespace: default
+data:
+  dbUrl: "jdbc:postgresql://db:5432/airlines"
+  jwtExpirationTime: "604800000"
+  springLoggingLevel: "info"
+  redisHost: "redis-0.redis"

@@ -1,9 +1,9 @@
 package com.example.task5;
 
-import com.example.task5.client.fileservice.dto.FileResponseDto;
-import com.example.task5.model.Game;
-import com.example.task5.repository.GameRepository;
-import com.example.task5.service.impl.GameCoverServiceImpl;
+import com.example.gameservice.client.fileservice.dto.FileResponseDto;
+import com.example.gameservice.model.Game;
+import com.example.gameservice.repository.GameRepository;
+import com.example.gameservice.service.impl.GameCoverServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

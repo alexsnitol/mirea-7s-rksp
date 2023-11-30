@@ -31,6 +31,20 @@ spring:
             scope:
               - email
               - profile
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVER:localhost:9092}
+    topic:
+      pay-response: ${PAY_RESPONSE_TOPIC}
+      pay-request: ${PAY_REQUEST_TOPIC}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      group-id: gamemarket
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: '*'
 
 eureka:
   client:

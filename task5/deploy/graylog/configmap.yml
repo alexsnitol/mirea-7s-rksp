@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: graylog-config
+  namespace: default
+data:
+  graylogHttpExternalUri: "http://127.0.0.1:9000/"
